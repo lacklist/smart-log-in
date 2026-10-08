@@ -1,4 +1,4 @@
-const API_DEFAULT = "http://localhost:8787";
+const API_BASE = "https://ipdqgqqlfbpucxchmmtf.supabase.co/functions/v1/session-vault";
 const PBKDF2_ITERATIONS = 310000;
 const SERVICE_PERMISSIONS = {
   google: ["https://*.google.com/*", "https://google.com/*"],
@@ -85,27 +85,10 @@ async function decryptSnapshot(envelope, password) {
   return JSON.parse(new TextDecoder().decode(plaintext));
 }
 
-function apiBase() {
-  return $("serverUrl").value.trim().replace(/\/+$/, "") || API_DEFAULT;
-}
-
-async function ensureServerPermission() {
-  const base = new URL(apiBase());
-  const local = base.hostname === "localhost" || base.hostname === "127.0.0.1";
-  if (base.protocol !== "https:" && !local) throw new Error("Для удалённого сервера требуется HTTPS");
-  const pattern = `${base.origin}/*`;
-  const current = await chrome.permissions.contains({ origins: [pattern] });
-  if (current) return base.href.replace(/\/$/, "");
-  const granted = await chrome.permissions.request({ origins: [pattern] });
-  if (!granted) throw new Error("Нет разрешения на подключение к серверу кабинета");
-  return base.href.replace(/\/$/, "");
-}
-
 async function api(path, options = {}) {
-  const base = await ensureServerPermission();
   const headers = { "Content-Type": "application/json", ...(options.headers || {}) };
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
-  const response = await fetch(`${base}${path}`, { ...options, headers });
+  const response = await fetch(`${API_BASE}${path}`, { ...options, headers });
   const body = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(body.error || `Ошибка сервера (${response.status})`);
   return body;
@@ -114,7 +97,6 @@ async function api(path, options = {}) {
 function setAccount(token, email) {
   accessToken = token;
   accountEmail = email;
-  chrome.storage.local.set({ apiBase: apiBase() });
   chrome.storage.session.set({ accessToken, accountEmail });
   showAccount(`Подключено: ${email}`, "success");
 }
@@ -281,8 +263,7 @@ clearButton.addEventListener("click", async () => {
   try { showStatus("Очищаю данные текущего устройства…"); await clearThisDevice(); } catch (error) { showStatus(error.message, "error"); }
 });
 
-chrome.storage.local.get(["apiBase", "servicePrefs"], (stored) => {
-  $("serverUrl").value = stored.apiBase || API_DEFAULT;
+chrome.storage.local.get(["servicePrefs"], (stored) => {
   loadServicePreferences(stored.servicePrefs);
   chrome.storage.session.get(["accessToken", "accountEmail"], (session) => {
     accessToken = session.accessToken || null;

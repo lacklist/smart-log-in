@@ -1,0 +1,3 @@
+[functions.session-vault]
+verify_jwt = false
+entrypoint = "./functions/session-vault/index.ts"

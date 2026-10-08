@@ -1,8 +1,0 @@
-{$DOMAIN} {
-	encode zstd gzip
-	reverse_proxy api:8787
-	log {
-		output stdout
-		format console
-	}
-}

@@ -5,8 +5,7 @@
   "description": "Личный зашифрованный архив браузерных сессий с переключателями сервисов.",
   "permissions": ["tabs", "cookies", "storage", "permissions"],
   "host_permissions": [
-    "http://localhost:8787/*",
-    "http://127.0.0.1:8787/*"
+    "https://ipdqgqqlfbpucxchmmtf.supabase.co/*"
   ],
   "optional_host_permissions": [
     "https://*/*",
