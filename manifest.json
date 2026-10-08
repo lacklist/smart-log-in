@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Session Workspace",
+  "version": "0.3.0",
+  "description": "Личный зашифрованный архив браузерных сессий для тестирования.",
+  "permissions": ["tabs", "cookies", "storage", "permissions"],
+  "host_permissions": [
+    "http://localhost:8787/*",
+    "http://127.0.0.1:8787/*"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "https://*.google.com/*",
+    "https://google.com/*",
+    "https://*.vk.com/*",
+    "https://vk.com/*",
+    "https://*.mirea.ru/*",
+    "https://mirea.ru/*"
+  ],
+  "action": {
+    "default_title": "Session Workspace",
+    "default_popup": "popup.html"
+  }
+}

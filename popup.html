@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Session Workspace</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">ПЕРСОНАЛЬНОЕ РАБОЧЕЕ МЕСТО</div>
+      <h1>Session Workspace</h1>
+      <p class="intro">Сначала войди в сервисы обычным способом. Затем сохрани зашифрованный снимок в свой кабинет.</p>
+    </header>
+
+    <section class="panel">
+      <h2>Личный кабинет</h2>
+      <label class="field">Адрес сервера
+        <input id="serverUrl" type="url" value="http://localhost:8787" autocomplete="url">
+      </label>
+      <label class="field">Электронная почта
+        <input id="email" type="email" autocomplete="username" placeholder="name@example.com">
+      </label>
+      <label class="field">Пароль кабинета
+        <input id="accountPassword" type="password" autocomplete="current-password">
+      </label>
+      <label class="field">Код приглашения для закрытого пилота
+        <input id="inviteCode" type="password" autocomplete="off" placeholder="Нужен только при создании кабинета">
+      </label>
+      <div class="button-row">
+        <button id="registerButton" class="secondary">Создать кабинет</button>
+        <button id="loginButton" class="secondary">Войти</button>
+      </div>
+      <div id="accountStatus" class="small-status" role="status" aria-live="polite">Не подключено</div>
+    </section>
+
+    <section class="service-list" aria-label="Сервисы">
+      <label class="service"><input type="checkbox" data-service="google" checked><span><strong>Google</strong><small>Google-сервисы</small></span></label>
+      <label class="service"><input type="checkbox" data-service="vk" checked><span><strong>VK</strong><small>vk.com</small></span></label>
+      <label class="service"><input type="checkbox" data-service="mirea" checked><span><strong>СДО РТУ МИРЭА</strong><small>online-edu.mirea.ru</small></span></label>
+    </section>
+
+    <label class="field master-field">Мастер-пароль для шифрования снимка
+      <input id="masterPassword" type="password" autocomplete="new-password" placeholder="Не совпадает с паролем кабинета">
+    </label>
+
+    <button id="saveButton" class="secondary full">Сохранить текущие сессии (первичная настройка)</button>
+    <button id="restoreButton" class="primary full">Войти везде</button>
+
+    <section class="exit-box">
+      <h2>Выйти на этом устройстве</h2>
+      <p>Удаляет локальные cookie выбранных сайтов. Зашифрованная копия в кабинете остаётся доступна для следующего входа.</p>
+      <label class="confirm-row"><input id="confirmClear" type="checkbox"><span>Понимаю, что выход может завершить другие аккаунты Google/VK в этом профиле</span></label>
+      <button id="clearButton" class="secondary full" disabled>Очистить сессии этого устройства</button>
+    </section>
+
+    <div id="status" role="status" aria-live="polite"></div>
+    <footer>Chrome/Chromium · Windows и Linux · облачный пилот</footer>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>
