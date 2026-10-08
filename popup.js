@@ -1,4 +1,4 @@
-const API_DEFAULT = "https://api.example.com";
+const API_DEFAULT = "http://localhost:8787";
 const PBKDF2_ITERATIONS = 310000;
 const SERVICE_PERMISSIONS = {
   google: ["https://*.google.com/*", "https://google.com/*"],
@@ -12,6 +12,7 @@ const SERVICE_URLS = {
   mirea: "https://online-edu.mirea.ru/"
 };
 const SERVICE_NAMES = { google: "Google", vk: "VK", mirea: "СДО МИРЭА" };
+const ALL_SERVICES = Object.keys(SERVICE_PERMISSIONS);
 
 const $ = (id) => document.getElementById(id);
 const openButton = $("restoreButton");
@@ -241,6 +242,27 @@ async function clearThisDevice() {
   showStatus(`Удалено cookie с этого устройства: ${removed}. Зашифрованный снимок в личном кабинете сохранён; удалённый отзыв у сайтов не подтверждён.`, "success");
 }
 
+function saveServicePreferences() {
+  const prefs = {};
+  for (const service of ALL_SERVICES) {
+    const input = document.querySelector(`input[data-service="${service}"]`);
+    if (input) prefs[service] = input.checked;
+  }
+  chrome.storage.local.set({ servicePrefs: prefs });
+}
+
+function loadServicePreferences(prefs) {
+  if (!prefs) return;
+  for (const service of ALL_SERVICES) {
+    const input = document.querySelector(`input[data-service="${service}"]`);
+    if (input && service in prefs) input.checked = prefs[service];
+  }
+}
+
+document.querySelectorAll("input[data-service]").forEach((input) => {
+  input.addEventListener("change", saveServicePreferences);
+});
+
 $("registerButton").addEventListener("click", async () => {
   try { await accountAction("register"); } catch (error) { showAccount(error.message, "error"); }
 });
@@ -259,8 +281,9 @@ clearButton.addEventListener("click", async () => {
   try { showStatus("Очищаю данные текущего устройства…"); await clearThisDevice(); } catch (error) { showStatus(error.message, "error"); }
 });
 
-chrome.storage.local.get(["apiBase"], (stored) => {
+chrome.storage.local.get(["apiBase", "servicePrefs"], (stored) => {
   $("serverUrl").value = stored.apiBase || API_DEFAULT;
+  loadServicePreferences(stored.servicePrefs);
   chrome.storage.session.get(["accessToken", "accountEmail"], (session) => {
     accessToken = session.accessToken || null;
     accountEmail = session.accountEmail || null;

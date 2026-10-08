@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Session Workspace",
-  "version": "0.3.0",
-  "description": "Личный зашифрованный архив браузерных сессий для тестирования.",
+  "version": "0.4.0",
+  "description": "Личный зашифрованный архив браузерных сессий с переключателями сервисов.",
   "permissions": ["tabs", "cookies", "storage", "permissions"],
   "host_permissions": [
     "http://localhost:8787/*",
