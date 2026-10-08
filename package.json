@@ -3,5 +3,8 @@
   "version": "0.4.0",
   "private": true,
   "description": "Chrome extension for encrypted browser session vault",
-  "type": "module"
+  "type": "module",
+  "scripts": {
+    "build": "echo 'No build step needed - static Chrome extension'"
+  }
 }
